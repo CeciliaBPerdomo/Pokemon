@@ -1,21 +1,23 @@
+import axios from 'axios'
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			pokemons: [],
 		},
+
 		actions: {
+
+			atraparPokemons: async() => {
+				try{
+					const results = await axios.get("https://pokeapi.co/api/v2/pokemon/", {})
+					setStore({pokemons: results.data.results})
+					return results.data.results
+				} catch (error){
+					console.log(error)
+				}
+			},
+
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
@@ -30,7 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					// don't forget to return something, that is how the async resolves
 					return data;
 				}catch(error){
-					console.log("Error loading message from backend", error)
+					//console.log("Error loading message from backend", error)
 				}
 			},
 			changeColor: (index, color) => {
